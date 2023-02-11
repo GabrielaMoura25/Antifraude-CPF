@@ -1,0 +1,14 @@
+DROP DATABASE IF EXISTS MaxMilhasDesafio;
+
+CREATE DATABASE MaxMilhasDesafio;
+
+USE MaxMilhasDesafio;
+
+CREATE TABLE user (
+  id INT NOT NULL auto_increment,
+  cpf VARCHAR(11) NOT NULL,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(id)
+) ENGINE=INNODB;
+
+SET SQL_SAFE_UPDATES = 0;
