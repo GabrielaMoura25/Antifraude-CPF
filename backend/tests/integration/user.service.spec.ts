@@ -188,4 +188,23 @@ describe("UserService integration tests", () => {
       expect(result).to.be.deep.equal([]);
     });
   });
+
+  describe("isValidCPF", () => {
+
+    it('should return true for valid CPF numbers', async () => {
+      const validCPFs = ['27543056534', '83502740852', '92875052179', '37484882461'];
+      for (const cpf of validCPFs) {
+        const result = await userService.isValidCPF(cpf);
+        expect(result).to.be.equal(true);
+      }
+    });
+
+    it('should return false for invalid CPF numbers', async () => {
+      const invalidCPFs = ['00000000000', '11111111111', '22222222222', '33333333333', '44444444444', '55555555555', '66666666666', '77777777777', '88888888888', '99999999999'];
+      for (const cpf of invalidCPFs) {
+        const result = await userService.isValidCPF(cpf);
+        expect(result).to.equal(false);
+      }
+    });
+  });
 });
