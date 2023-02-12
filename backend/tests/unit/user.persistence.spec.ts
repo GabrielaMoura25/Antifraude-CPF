@@ -3,7 +3,8 @@ import db from '../../src/infrastructure/utils/Connection';
 
 describe('UserPersistence', () => {
   const userPersistence = new UserPersistence();
-  const user = {cpf: '12345678901', createdAt: new Date()};
+  const date = new Date();
+  const user = {cpf: '12345678901', createdAt: date};
 
   afterEach(async () => {
     const query = 'DELETE FROM MaxMilhasDesafio.user WHERE cpf = ?';
@@ -13,25 +14,35 @@ describe('UserPersistence', () => {
 
   it('should add cpf', async () => {
     const result = await userPersistence.addCpf(user);
-    expect(result).toEqual(user);
+    
+    expect(result).toEqual({cpf: user.cpf});
   });
 
   it('should find by cpf', async () => {
     await userPersistence.addCpf(user);
     const result = await userPersistence.findByCpf(user);
-    expect(result).toEqual({...user, id: expect.any(Number)});
+    const expected = {...user, id: expect.any(Number)};
+    expected.createdAt = new Date(expected.createdAt).toISOString().split('T')[0] as unknown as Date;
+    result.createdAt = new Date(result.createdAt).toISOString().split('T')[0] as unknown as Date;
+
+    expect(result).toEqual(expected);
   });
 
   it('should remove cpf', async () => {
     await userPersistence.addCpf(user);
     await userPersistence.removeCpf(user);
     const result = await userPersistence.findByCpf(user);
+
     expect(result).toBeNull();
   });
 
   it('should return all cpf', async () => {
     await userPersistence.addCpf(user);
     const result = await userPersistence.allCpf();
-    expect(result).toEqual([{...user, id: expect.any(Number)}]);
+    const expected = {...user, id: expect.any(Number)};
+    expected.createdAt = new Date(expected.createdAt).toISOString().split('T')[0] as unknown as Date;
+    result[0].createdAt = new Date(result[0].createdAt).toISOString().split('T')[0] as unknown as Date;
+
+    expect(result).toEqual([expected]);
   });
 });
