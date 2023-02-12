@@ -1,18 +1,7 @@
-// import chai from 'chai';
-// import * as sinon from 'sinon';
-
-// import chaiHttp from 'chai-http';
-import { UserController } from '../../src/infrastructure/controllers/UserController';
 import { UserService } from '../../src/domain/usecase/UserService';
 import { UserStorie } from '../../src/domain/repository/UserRepository';
-import App from '../../src/application/app';
-import { User } from '../../src/domain/entities/User';
-import { IUserPersistence } from '../../src/domain/repository/IUserPersistence';
 
-// chai.use(chaiHttp);
-// const { expect } = chai;
-
-jest.mock("../repository/UserRepository", () => {
+jest.mock("../../src/domain/repository/UserRepository", () => {
   return {
     UserStorie: jest.fn().mockImplementation(() => {
       return {
@@ -47,7 +36,7 @@ describe("UserService", () => {
       const entity = { cpf: "invalidcpf" };
       try {
         await userService.addCpf(entity);
-      } catch (error) {
+      } catch (error: any) {
         expect(error.message).toEqual("InvalidCpfException");
       }
     });
@@ -56,7 +45,7 @@ describe("UserService", () => {
       const entity = { cpf: "12345678901" };
       try {
         await userService.addCpf(entity);
-      } catch (error) {
+      } catch (error: any) {
         expect(error.message).toEqual("ExistsCpfException");
       }
     });
@@ -65,7 +54,7 @@ describe("UserService", () => {
       const entity = { cpf: "123456789" };
       try {
         await userService.addCpf(entity);
-      } catch (error) {
+      } catch (error: any) {
         expect(error.message).toEqual("InvalidCpfException");
       }
     });
@@ -96,13 +85,11 @@ describe("UserService", () => {
       };
       await userStorie.findByCpf({
         cpf: entity.cpf,
-        createdAt: entity.createdAt,
       });
       const result = await userService.findByCpf(entity);
       expect(result).toEqual({
         cpf: entity.cpf,
         createdAt: entity.createdAt,
-        id: 1,
       });
     });
   });
@@ -119,7 +106,7 @@ describe("UserService", () => {
       try {
         await userService.removeCpf(entity);
         fail();
-      } catch (error) {
+      } catch (error: any) {
         expect(error.message).toBe('NotFoundCpfException');
       }
     });
@@ -129,7 +116,7 @@ describe("UserService", () => {
         const entity = { cpf: '123456789' };
         await userService.removeCpf(entity);
         fail();
-      } catch (error) {
+      } catch (error: any) {
         expect(error.message).toBe('InvalidCpfException');
       }
     });

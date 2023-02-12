@@ -1,16 +1,6 @@
-// import chai from 'chai';
-// import * as sinon from 'sinon';
-
-import chaiHttp from 'chai-http';
 import { UserController } from '../../src/infrastructure/controllers/UserController';
 import { UserService } from '../../src/domain/usecase/UserService';
 import { UserStorie } from '../../src/domain/repository/UserRepository';
-import App from '../../src/application/app';
-import { User } from '../../src/domain/entities/User';
-
-
-// chai.use(chaiHttp);
-// const { expect } = chai;
 
 describe('UserController', () => {
   let userController: UserController;
@@ -30,7 +20,6 @@ describe('UserController', () => {
       const req = {
         body: {
           cpf: '12345678900',
-          createdAt: '2022-01-01T00:00:00.000Z'
         }
       };
       const res = {
@@ -43,10 +32,6 @@ describe('UserController', () => {
 
 
       await userController.addCpf(req as any, res as any, next);
-      // sinon.stub(userService, 'findByCpf').resolves(req.body as any);
-      // sinon.stub(userService, 'isValidCPF').resolves(req.body as any);
-      // sinon.stub(userService, 'addCpf').resolves(req.body as any);
-      // const response = await chai.request(App).post('/cpf').send(req.body as any);
 
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({ cpf: '12345678900' });
@@ -77,9 +62,6 @@ describe('UserController', () => {
     req = {
       params: {
         cpf: '12345678901'
-      },
-      body: {
-        createdAt: '2022-12-10'
       }
     };
     res = {
@@ -89,13 +71,12 @@ describe('UserController', () => {
     next = jest.fn();
 
     it('should find the user by cpf and return the user information without the id', async () => {
-      const user: Omit<User, "id"> = {
+      const user = {
         cpf: '12345678901',
-        createdAt: '2022-12-10'
       };
-      const expectedUser: Omit<User, "id"> = {
+      const expectedUser = {
         cpf: '12345678901',
-        createdAt: '2022-12-10'
+       
       };
       (userService.findByCpf as jest.Mock).mockResolvedValue(user);
       await userController.findByCpf(req, res, next);
@@ -126,7 +107,7 @@ describe('UserController', () => {
       };
       const next = jest.fn();
 
-      await userController.removeCpf(req, res, next);
+      userController.removeCpf(req as any, res as any, next);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({});
@@ -147,7 +128,7 @@ describe('UserController', () => {
         json: jest.fn()
       };
 
-      await UserController.allCpf(undefined, mockResponse, undefined);
+      await userController.allCpf(undefined as any, mockResponse as any, undefined as any);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith([
@@ -167,7 +148,7 @@ describe('UserController', () => {
 
       const mockNext = jest.fn();
 
-      await UserController.allCpf(undefined, mockResponse, mockNext);
+      await userController.allCpf(undefined as any, mockResponse as any, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(new Error('Error ao buscar todos os cpfs'));
     });

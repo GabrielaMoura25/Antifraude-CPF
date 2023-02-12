@@ -1,20 +1,8 @@
-// import chai from 'chai';
-// import * as sinon from 'sinon';
-
-// import chaiHttp from 'chai-http';
-import { UserController } from '../../src/infrastructure/controllers/UserController';
-import { UserService } from '../../src/domain/usecase/UserService';
 import { UserStorie } from '../../src/domain/repository/UserRepository';
-import App from '../../src/application/app';
-import { User } from '../../src/domain/entities/User';
-import { IUserPersistence } from '../../src/domain/repository/IUserPersistence';
-
-// chai.use(chaiHttp);
-// const { expect } = chai;
 
 describe('UserStorie', () => {
   let userStorie: UserStorie;
-  let userPersistenceMock: IUserPersistence;
+  let userPersistenceMock: any;
 
   beforeEach(() => {
     userPersistenceMock = {
@@ -29,11 +17,10 @@ describe('UserStorie', () => {
 
   describe('addCpf', () => {
     it('should call userPersistence.addCpf with the correct arguments', async () => {
-      const entity = { cpf: '12345678901' };
-      const expectedResult = { id: 1, cpf: '12345678901' };
-
-      await userPersistenceMock.addCpf(expectedResult);
-
+      const entity = { cpf: '64852893055' };
+      const expectedResult = { id: 1, cpf: '64852893055' };
+      userPersistenceMock.addCpf.mockResolvedValue(expectedResult);
+      
       const result = await userStorie.addCpf(entity);
 
       expect(result).toEqual(expectedResult);
@@ -43,10 +30,10 @@ describe('UserStorie', () => {
 
   describe('findByCpf', () => {
     it('should call userPersistence.findByCpf with the correct arguments', async () => {
-      const entity = { cpf: '12345678901', createdAt: new Date() };
+      const entity = { cpf: '12345678901' };
       const expectedResult = { id: 1, cpf: '12345678901' };
 
-      await userPersistenceMock.findByCpf(expectedResult);
+      userPersistenceMock.findByCpf.mockResolvedValue(expectedResult);
 
       const result = await userStorie.findByCpf(entity);
 
@@ -71,7 +58,7 @@ describe('UserStorie', () => {
     it('should call userPersistence.allCpf and return the correct result', async () => {
       const expectedResult = [{ id: 1, cpf: '12345678901' }, { id: 2, cpf: '10987654321' }];
 
-      await userPersistenceMock.allCpf();
+      userPersistenceMock.allCpf.mockResolvedValue(expectedResult);
 
       const result = await userStorie.allCpf();
 

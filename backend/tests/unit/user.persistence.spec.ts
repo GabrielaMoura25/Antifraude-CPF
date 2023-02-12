@@ -1,7 +1,6 @@
 import { UserPersistence } from '../../src/infrastructure/persistence/UserPersistence';
 import db from '../../src/infrastructure/utils/Connection';
 
-
 describe('UserPersistence', () => {
   const userPersistence = new UserPersistence();
   const user = {cpf: '12345678901', createdAt: new Date()};

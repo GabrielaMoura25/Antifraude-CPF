@@ -114,7 +114,7 @@ describe("UserService integration tests", () => {
   
     it("should throw an error if the CPF is not found", async () => {
       try {
-        await userService.findByCpf({ cpf: "", createdAt: new Date() });
+        await userService.findByCpf({ cpf: "" });
         fail();
       } catch (error: any) {
         expect(error.message).to.equal("NotFoundCpfException");
