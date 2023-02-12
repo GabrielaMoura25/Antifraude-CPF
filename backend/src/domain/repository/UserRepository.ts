@@ -9,7 +9,7 @@ class UserStorie {
     return await this.userPersistence.addCpf(entity);
   }
     
-  public async findByCpf(entity: Omit<User, "id">): Promise<User> {
+  public async findByCpf(entity: Pick<User, "cpf">): Promise<User> {
     return await this.userPersistence.findByCpf(entity);
   }
     

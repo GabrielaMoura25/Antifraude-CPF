@@ -9,7 +9,7 @@ class UserService {
     if (!validCpf) 
       throw new Error("InvalidCpfException");
 
-    const cpfExist = await this.findByCpf(entity as Omit<User, "id">); 
+    const cpfExist = await this.findByCpf(entity); 
     if (cpfExist) 
       throw new Error("ExistsCpfException");
 
@@ -19,14 +19,14 @@ class UserService {
     return await this.userStorie.addCpf(entity);
   }
 
-  public findByCpf = async (entity: Omit<User, "id">): Promise<User> => {
+  public findByCpf = async (entity: Pick<User, "cpf">): Promise<User> => {
     if (!entity.cpf)
       throw new Error("NotFoundCpfException");
     
     if (!this.isValidCPF(entity.cpf))
       throw new Error("InvalidCpfException");
 
-    return await this.userStorie.findByCpf({cpf:entity.cpf, createdAt: entity.createdAt});
+    return await this.userStorie.findByCpf({ cpf:entity.cpf });
   }
 
   public removeCpf = async (entity: Pick<User, "cpf">): Promise<void> => {

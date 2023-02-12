@@ -6,22 +6,20 @@ class UserController {
   constructor(private userService: UserService) {}
 
   public addCpf:RequestHandler = async (req, res, next) => {
-    const cpf: Pick<User, "cpf" | "createdAt"> = {
+    const cpf: Pick<User, "cpf"> = {
       cpf: req.body.cpf,
-      createdAt: req.body.createdAt
     }
     try {
       const result = await this.userService.addCpf(cpf);
-      return res.status(201).json({ cpf: result.cpf });
+      return res.status(201).json(result);
     } catch (error) {
       next(error)
     }
   }
 
   public findByCpf:RequestHandler = async (req, res, next) => {
-    const cpf: Omit<User, "id"> = {
+    const cpf: Pick<User, "cpf"> = {
       cpf: req.params.cpf,
-      createdAt: req.body.createdAt
     }
     try {
       const result = await this.userService.findByCpf(cpf);
