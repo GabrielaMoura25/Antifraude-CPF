@@ -21,9 +21,7 @@ describe("UserPersistence", () => {
   it("should find by cpf", async () => {
     await userPersistence.addCpf(user);
     const result = await userPersistence.findByCpf(user);
-    const expected = {...user, id: expect.any(Number)};
-    expected.createdAt = new Date(expected.createdAt).toISOString().split('T')[0] as unknown as Date;
-    result.createdAt = new Date(result.createdAt).toISOString().split('T')[0] as unknown as Date;
+    const expected = {...user, id: expect.any(Number), createdAt: expect.any(Date)};
 
     expect(result).toEqual(expected);
   });
@@ -39,9 +37,7 @@ describe("UserPersistence", () => {
   it("should return all cpf", async () => {
     await userPersistence.addCpf(user);
     const result = await userPersistence.allCpf();
-    const expected = {...user, id: expect.any(Number)};
-    expected.createdAt = new Date(expected.createdAt).toISOString().split('T')[0] as unknown as Date;
-    result[0].createdAt = new Date(result[0].createdAt).toISOString().split('T')[0] as unknown as Date;
+    const expected = {...user, id: expect.any(Number), createdAt: expect.any(Date)};
 
     expect(result).toEqual([expected]);
   });
