@@ -1,10 +1,12 @@
 import { UserStorie } from '../../src/domain/repository/UserRepository';
 
 describe("UserStorie", () => {
+
   let userStorie: UserStorie;
   let userPersistenceMock: any;
 
   beforeEach(() => {
+
     userPersistenceMock = {
       addCpf: jest.fn(),
       findByCpf: jest.fn(),
@@ -16,9 +18,12 @@ describe("UserStorie", () => {
   });
 
   describe("addCpf", () => {
+
     it("should call userPersistence.addCpf with the correct arguments", async () => {
       const entity = { cpf: "64852893055" };
+
       const expectedResult = { id: 1, cpf: "64852893055" };
+
       userPersistenceMock.addCpf.mockResolvedValue(expectedResult);
       
       const result = await userStorie.addCpf(entity);
@@ -29,8 +34,10 @@ describe("UserStorie", () => {
   });
 
   describe("findByCpf", () => {
+
     it("should call userPersistence.findByCpf with the correct arguments", async () => {
       const entity = { cpf: "12345678901" };
+
       const expectedResult = { id: 1, cpf: "12345678901" };
 
       userPersistenceMock.findByCpf.mockResolvedValue(expectedResult);
@@ -43,6 +50,7 @@ describe("UserStorie", () => {
   });
 
   describe("removeCpf", () => {
+
     it("should call userPersistence.removeCpf with the correct arguments", async () => {
       const entity = { cpf: "12345678901" };
 
@@ -55,6 +63,7 @@ describe("UserStorie", () => {
   });
 
   describe("allCpf", () => {
+    
     it("should call userPersistence.allCpf and return the correct result", async () => {
       const expectedResult = [{ id: 1, cpf: "12345678901" }, { id: 2, cpf: "10987654321" }];
 

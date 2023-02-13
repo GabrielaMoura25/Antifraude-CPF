@@ -22,6 +22,7 @@ describe("UserService", () => {
   let userPersistence: UserPersistence;
 
   beforeEach(() => {
+
     userStorie = new UserStorie(userPersistence);
     userService = new UserService(userStorie);
   });
@@ -31,7 +32,8 @@ describe("UserService", () => {
     it("should return the added cpf", async () => {
       const entity = { cpf: "64852893055" };
 
-      // userStorie.addCpf = jest.fn().mockResolvedValue(entity);
+      userStorie.addCpf = jest.fn().mockResolvedValue(entity);
+
       const result = await userService.addCpf(entity);
       console.log(result);
       
@@ -41,6 +43,7 @@ describe("UserService", () => {
 
     it("should throw an error if cpf is invalid", async () => {
       const entity = { cpf: "123456789012" };
+      
       try {
         await userService.addCpf(entity);
       } catch (error: any) {
@@ -50,7 +53,9 @@ describe("UserService", () => {
 
     it("should throw an error if cpf already exists", async () => {
       const entity = { cpf: "64852893055" };
+
       userStorie.findByCpf = jest.fn().mockResolvedValue(entity);
+
       try {
         await userService.addCpf(entity);
       } catch (error: any) {
@@ -60,6 +65,7 @@ describe("UserService", () => {
 
     it("should throw an error if cpf length is different than 11", async () => {
       const entity = { cpf: "123456789" };
+
       try {
         await userService.addCpf(entity);
       } catch (error: any) {
@@ -112,19 +118,19 @@ describe("UserService", () => {
 
     it("should throw an error if the entity is not found", async () => {
       const entity = { cpf: "12345678901" };
+
       try {
         await userService.removeCpf(entity);
-        // fail();
       } catch (error: any) {
         expect(error.message).toBe("NotFoundCpfException");
       }
     });
 
     it("should throw an error if the CPF is invalid", async () => {
+      const entity = { cpf: "123456789" };
+      
       try {
-        const entity = { cpf: "123456789" };
         await userService.removeCpf(entity);
-        // fail();
       } catch (error: any) {
         expect(error.message).toBe("InvalidCpfException");
       }
@@ -137,8 +143,9 @@ describe("UserService", () => {
       const expectedResult = [{ cpf: "64852893055", createdAt: "2022-01-01" }, { cpf: "10987654321", createdAt: "2022-01-02" }];
   
       userStorie.allCpf = jest.fn().mockResolvedValue(expectedResult as any);
-  
+
       const result = await userService.allCpf();
+
       expect(result).toEqual(expectedResult);
     });
   
@@ -146,6 +153,7 @@ describe("UserService", () => {
       userStorie.allCpf = jest.fn().mockResolvedValue([]);
   
       const result = await userService.allCpf();
+
       expect(result).toEqual([]);
     });
   });
@@ -153,16 +161,19 @@ describe("UserService", () => {
   describe("isValidCPF", () => {
     it("should return true for a valid CPF number", async () => {
       const result = await userService.isValidCPF("12345678909");
+
       expect(result).toBe(true);
     });
 
     it("should return false for an invalid CPF number", async () => {
       const result = await userService.isValidCPF("11111111111");
+
       expect(result).toBe(false);
     });
 
     it("should return false for a non-string input", async () => {
       const result = await userService.isValidCPF(12345678909);
+
       expect(result).toBe(false);
     });
   });

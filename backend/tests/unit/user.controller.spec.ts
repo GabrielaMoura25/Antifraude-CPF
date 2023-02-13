@@ -7,16 +7,19 @@ import { User } from '../../src/domain/entities/User';
 jest.mock('../../src/domain/usecase/UserService');
 
 describe('UserController', () => {
+
   let userController: UserController;
   let userService: UserService;
   let userStorie: UserStorie;
 
   beforeEach(() => {
+
     userService = new UserService(userStorie);
     userController = new UserController(userService);
   });
 
   describe('addCpf', () => {
+
     it('should add a cpf to a user', async () => {
       const cpf = { cpf: '12345678900' };
       const req = { body: cpf };
@@ -42,6 +45,7 @@ describe('UserController', () => {
       const next = jest.fn();
 
       const error = new Error('Error adding CPF');
+
       userService.addCpf = jest.fn().mockRejectedValue(error);
 
       await userController.addCpf(req as any, res as any, next);
@@ -61,13 +65,17 @@ describe('UserController', () => {
         json: jest.fn(),
       };
       const next = jest.fn();
+
       const expectedUser: User = {
         cpf: "12345678901",
         id: 123,
         createdAt: new Date(),
       };
+
       userService.findByCpf = jest.fn().mockResolvedValue(expectedUser);
+
       await userController.findByCpf(req as any, res as any, next);
+
       expect(userService.findByCpf).toHaveBeenCalledWith(cpf);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ ...expectedUser, id: undefined });
@@ -82,8 +90,11 @@ describe('UserController', () => {
       const next = jest.fn();
     
       const error = new Error("Error finding the user by cpf");
+
       userService.findByCpf = jest.fn().mockRejectedValue(error);
+
       await userController.findByCpf(req as any, res, next);
+
       expect(next).toHaveBeenCalledWith(error);
     });
   });
@@ -100,6 +111,7 @@ describe('UserController', () => {
       const next = jest.fn();
 
       userService.removeCpf = jest.fn().mockResolvedValue({});
+
       await userController.removeCpf(req as any, res as any, next);
 
       expect(userService.removeCpf).toHaveBeenCalledWith(cpf);
@@ -117,7 +129,9 @@ describe('UserController', () => {
       const next = jest.fn();
 
       const error = new Error("Error removing the cpf");
+
       userService.removeCpf = jest.fn().mockRejectedValue(error);
+
       await userController.removeCpf(req as any, res, next);
 
       expect(next).toHaveBeenCalledWith(error);
@@ -156,6 +170,7 @@ describe('UserController', () => {
       const next = jest.fn();
 
       const error = new Error("Error fetching all cpfs");
+      
       userService.allCpf = jest.fn().mockRejectedValue(error);
 
       await userController.allCpf(req, res, next);
