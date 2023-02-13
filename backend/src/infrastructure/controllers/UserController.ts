@@ -23,6 +23,7 @@ class UserController {
     }
     try {
       const result = await this.userService.findByCpf(cpf);
+      if (!result) return res.status(404).json({ type: "InvalidCpfException", message: "CPF is not valid." });
       return res.status(200).json({ ...result, id: undefined });
     } catch (error) {
       next(error)

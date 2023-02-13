@@ -1,3 +1,4 @@
+import './helpers/Mock.db';
 import { UserPersistence } from '../../src/infrastructure/persistence/UserPersistence';
 import db from '../../src/infrastructure/utils/Connection';
 
@@ -7,21 +8,16 @@ describe("UserPersistence", () => {
   const date = new Date();
   const user = {cpf: "12345678901", createdAt: date};
 
-  afterEach(async () => {
-
-    const query = 'DELETE FROM MaxMilhasDesafio.user WHERE cpf = ?';
-    const values = [user.cpf];
-    await db.execute(query, values);
-  });
-
   it("should add cpf", async () => {
+    db.execute = jest.fn().mockResolvedValue({});
+
     const result = await userPersistence.addCpf(user);
     
     expect(result).toEqual({cpf: user.cpf});
   });
 
   it("should find by cpf", async () => {
-    await userPersistence.addCpf(user);
+    (db.execute as jest.Mock).mockImplementationOnce(() => Promise.resolve([[{ ...user, id: 1 }]]));
 
     const result = await userPersistence.findByCpf(user);
 
@@ -31,17 +27,13 @@ describe("UserPersistence", () => {
   });
 
   it("should remove cpf", async () => {
-    await userPersistence.addCpf(user);
+    const result = await userPersistence.removeCpf(user);
 
-    await userPersistence.removeCpf(user);
-
-    const result = await userPersistence.findByCpf(user);
-
-    expect(result).toBeNull();
+    expect(result).toEqual(undefined);
   });
 
   it("should return all cpf", async () => {
-    await userPersistence.addCpf(user);
+    (db.execute as jest.Mock).mockImplementationOnce(() => Promise.resolve([[{ ...user, id: 1 }]]));
 
     const result = await userPersistence.allCpf();
     

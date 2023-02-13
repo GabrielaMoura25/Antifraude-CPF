@@ -27,6 +27,10 @@ Navegue até a pasta raiz da aplicação:
     
     cd Desafio-Max-Milhas
 
+Navegue até a pasta backend:
+
+    cd backend
+
 Instale as dependências:
 
     npm install
