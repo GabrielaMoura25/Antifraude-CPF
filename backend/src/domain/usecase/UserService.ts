@@ -33,6 +33,10 @@ class UserService {
     if (!entity)
       throw new Error("NotFoundCpfException");
 
+    const cpfExist = await this.findByCpf(entity); 
+    if (!cpfExist) 
+      throw new Error("InvalidCpfException");
+
     if (!this.isValidCPF(entity.cpf))
       throw new Error("InvalidCpfException");
 
