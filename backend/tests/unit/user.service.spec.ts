@@ -62,25 +62,25 @@ describe("UserService", () => {
 
   describe("findByCpf", () => {
     
-    it('should throw error when cpf is not found', async () => {
+    it("should throw error when cpf is not found", async () => {
         const entity = {
-          cpf: 'not found cpf',
+          cpf: "not found cpf",
           createdAt: new Date(),
         };
-        await expect(userService.findByCpf(entity)).rejects.toThrow('NotFoundCpfException');
+        await expect(userService.findByCpf(entity)).rejects.toThrow("NotFoundCpfException");
     });
   
-    it('should throw error when cpf is invalid', async () => {
+    it("should throw error when cpf is invalid", async () => {
       const entity = {
-        cpf: 'invalid cpf',
+        cpf: "invalid cpf",
         createdAt: new Date(),
       };
-      await expect(userService.findByCpf(entity)).rejects.toThrow('InvalidCpfException');
+      await expect(userService.findByCpf(entity)).rejects.toThrow("InvalidCpfException");
     });
   
-    it('should find the cpf when it exists', async () => {
+    it("should find the cpf when it exists", async () => {
       const entity = {
-        cpf: 'valid cpf',
+        cpf: "valid cpf",
         createdAt: new Date(),
       };
       await userStorie.findByCpf({
@@ -94,30 +94,30 @@ describe("UserService", () => {
     });
   });
 
-  describe('removeCpf', () => {
-    it('should remove the CPF from the database', async () => {
-      const entity = { cpf: '12345678901' };
+  describe("removeCpf", () => {
+    it("should remove the CPF from the database", async () => {
+      const entity = { cpf: "12345678901" };
       await userService.removeCpf(entity);
       expect(userStorie.removeCpf).toHaveBeenCalledWith(entity);
     });
 
-    it('should throw an error if the entity is not found', async () => {
-      const entity = { cpf: '12345678901' };
+    it("should throw an error if the entity is not found", async () => {
+      const entity = { cpf: "12345678901" };
       try {
         await userService.removeCpf(entity);
         fail();
       } catch (error: any) {
-        expect(error.message).toBe('NotFoundCpfException');
+        expect(error.message).toBe("NotFoundCpfException");
       }
     });
 
-    it('should throw an error if the CPF is invalid', async () => {
+    it("should throw an error if the CPF is invalid", async () => {
       try {
-        const entity = { cpf: '123456789' };
+        const entity = { cpf: "123456789" };
         await userService.removeCpf(entity);
         fail();
       } catch (error: any) {
-        expect(error.message).toBe('InvalidCpfException');
+        expect(error.message).toBe("InvalidCpfException");
       }
     });
   });
@@ -129,32 +129,32 @@ describe("UserService", () => {
     it("Deve retornar uma lista de cpfs", async () => {
       const expectedResult = [{ cpf: "12345678901", createdAt: "2022-01-01" }, { cpf: "10987654321", createdAt: "2022-01-02" }];
   
-      jest.spyOn(userStorie, "allCpf").mockResolvedValue(expectedResult as any);
+      userStorie.allCpf = jest.fn().mockResolvedValue(expectedResult as any);
   
       const result = await userService.allCpf();
       expect(result).toEqual(expectedResult);
     });
   
     it("Deve retornar uma lista vazia quando não houver cpfs", async () => {
-      jest.spyOn(userStorie, "allCpf").mockResolvedValue([]);
+      userStorie.allCpf = jest.fn().mockResolvedValue([]);
   
       const result = await userService.allCpf();
       expect(result).toEqual([]);
     });
   });
 
-  describe('isValidCPF', () => {
-    it('should return true for a valid CPF number', async () => {
-      const result = await userService.isValidCPF('12345678909');
+  describe("isValidCPF", () => {
+    it("should return true for a valid CPF number", async () => {
+      const result = await userService.isValidCPF("12345678909");
       expect(result).toBe(true);
     });
 
-    it('should return false for an invalid CPF number', async () => {
-      const result = await userService.isValidCPF('11111111111');
+    it("should return false for an invalid CPF number", async () => {
+      const result = await userService.isValidCPF("11111111111");
       expect(result).toBe(false);
     });
 
-    it('should return false for a non-string input', async () => {
+    it("should return false for a non-string input", async () => {
       const result = await userService.isValidCPF(12345678909);
       expect(result).toBe(false);
     });

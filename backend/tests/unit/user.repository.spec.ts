@@ -1,6 +1,6 @@
 import { UserStorie } from '../../src/domain/repository/UserRepository';
 
-describe('UserStorie', () => {
+describe("UserStorie", () => {
   let userStorie: UserStorie;
   let userPersistenceMock: any;
 
@@ -15,10 +15,10 @@ describe('UserStorie', () => {
     userStorie = new UserStorie(userPersistenceMock);
   });
 
-  describe('addCpf', () => {
-    it('should call userPersistence.addCpf with the correct arguments', async () => {
-      const entity = { cpf: '64852893055' };
-      const expectedResult = { id: 1, cpf: '64852893055' };
+  describe("addCpf", () => {
+    it("should call userPersistence.addCpf with the correct arguments", async () => {
+      const entity = { cpf: "64852893055" };
+      const expectedResult = { id: 1, cpf: "64852893055" };
       userPersistenceMock.addCpf.mockResolvedValue(expectedResult);
       
       const result = await userStorie.addCpf(entity);
@@ -28,10 +28,10 @@ describe('UserStorie', () => {
     });
   });
 
-  describe('findByCpf', () => {
-    it('should call userPersistence.findByCpf with the correct arguments', async () => {
-      const entity = { cpf: '12345678901' };
-      const expectedResult = { id: 1, cpf: '12345678901' };
+  describe("findByCpf", () => {
+    it("should call userPersistence.findByCpf with the correct arguments", async () => {
+      const entity = { cpf: "12345678901" };
+      const expectedResult = { id: 1, cpf: "12345678901" };
 
       userPersistenceMock.findByCpf.mockResolvedValue(expectedResult);
 
@@ -42,9 +42,9 @@ describe('UserStorie', () => {
     });
   });
 
-  describe('removeCpf', () => {
-    it('should call userPersistence.removeCpf with the correct arguments', async () => {
-      const entity = { cpf: '12345678901' };
+  describe("removeCpf", () => {
+    it("should call userPersistence.removeCpf with the correct arguments", async () => {
+      const entity = { cpf: "12345678901" };
 
       userPersistenceMock.removeCpf(undefined);
 
@@ -54,9 +54,9 @@ describe('UserStorie', () => {
     });
   });
 
-  describe('allCpf', () => {
-    it('should call userPersistence.allCpf and return the correct result', async () => {
-      const expectedResult = [{ id: 1, cpf: '12345678901' }, { id: 2, cpf: '10987654321' }];
+  describe("allCpf", () => {
+    it("should call userPersistence.allCpf and return the correct result", async () => {
+      const expectedResult = [{ id: 1, cpf: "12345678901" }, { id: 2, cpf: "10987654321" }];
 
       userPersistenceMock.allCpf.mockResolvedValue(expectedResult);
 

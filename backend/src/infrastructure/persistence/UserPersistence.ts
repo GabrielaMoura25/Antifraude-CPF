@@ -1,7 +1,7 @@
-import { User } from "../../domain/entities/User";
-import { IUserPersistence } from "../../domain/repository/IUserPersistence";
+import { User } from '../../domain/entities/User';
+import { IUserPersistence } from '../../domain/repository/IUserPersistence';
 import db from '../utils/Connection';
-import { ResultSetHeader } from "mysql2";
+import { ResultSetHeader } from 'mysql2';
 
 class UserPersistence implements IUserPersistence {
   public addCpf = async (entity: Pick<User, "cpf">) => {

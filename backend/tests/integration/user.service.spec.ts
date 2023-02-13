@@ -1,9 +1,9 @@
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { UserStorie } from "../../src/domain/repository/UserRepository";
-import { UserService } from "../../src/domain/usecase/UserService";
-import { IUserPersistence } from "../../src/domain/repository/IUserPersistence";
+import { UserStorie } from '../../src/domain/repository/UserRepository';
+import { UserService } from '../../src/domain/usecase/UserService';
+import { IUserPersistence } from '../../src/domain/repository/IUserPersistence';
 import { User } from '../../src/domain/entities/User';
 
 chai.use(sinonChai);
@@ -191,16 +191,16 @@ describe("UserService integration tests", () => {
 
   describe("isValidCPF", () => {
 
-    it('should return true for valid CPF numbers', async () => {
-      const validCPFs = ['27543056534', '83502740852', '92875052179', '37484882461'];
+    it("should return true for valid CPF numbers", async () => {
+      const validCPFs = ["27543056534", "83502740852", "92875052179", "37484882461"];
       for (const cpf of validCPFs) {
         const result = await userService.isValidCPF(cpf);
         expect(result).to.be.equal(true);
       }
     });
 
-    it('should return false for invalid CPF numbers', async () => {
-      const invalidCPFs = ['00000000000', '11111111111', '22222222222', '33333333333', '44444444444', '55555555555', '66666666666', '77777777777', '88888888888', '99999999999'];
+    it("should return false for invalid CPF numbers", async () => {
+      const invalidCPFs = ["00000000000", "11111111111", "22222222222", "33333333333", "44444444444", "55555555555", "66666666666", "77777777777", "88888888888", "99999999999"];
       for (const cpf of invalidCPFs) {
         const result = await userService.isValidCPF(cpf);
         expect(result).to.equal(false);

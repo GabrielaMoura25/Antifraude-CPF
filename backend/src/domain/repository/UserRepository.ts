@@ -1,5 +1,5 @@
-import { User } from "../entities/User";
-import { IUserPersistence } from "./IUserPersistence";
+import { User } from '../entities/User';
+import { IUserPersistence } from './IUserPersistence';
 
 class UserStorie {
     

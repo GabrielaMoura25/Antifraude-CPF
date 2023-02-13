@@ -1,14 +1,15 @@
 import { UserController } from '../../src/infrastructure/controllers/UserController';
 import { UserService } from '../../src/domain/usecase/UserService';
 import { UserStorie } from '../../src/domain/repository/UserRepository';
+import express from 'express';
+import { User } from '../../src/domain/entities/User';
+
+jest.mock('../../src/domain/usecase/UserService');
 
 describe('UserController', () => {
   let userController: UserController;
   let userService: UserService;
   let userStorie: UserStorie;
-  let res: any;
-  let req: any;
-  let next: any;
 
   beforeEach(() => {
     userService = new UserService(userStorie);
@@ -16,141 +17,150 @@ describe('UserController', () => {
   });
 
   describe('addCpf', () => {
-    it('should add a cpf to the user', async () => {
-      const req = {
-        body: {
-          cpf: '12345678900',
-        }
-      };
+    it('should add a cpf to a user', async () => {
+      const cpf = { cpf: '12345678900' };
+      const req = { body: cpf };
       const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn().mockReturnValue({ cpf: '12345678900' })
+        status: jest.fn().mockReturnValue({ json: jest.fn() }),
       };
       const next = jest.fn();
 
-      userService.addCpf = jest.fn().mockResolvedValue(req.body as any);
-
+      userService.addCpf = jest.fn().mockResolvedValue(cpf);
 
       await userController.addCpf(req as any, res as any, next);
 
+      expect(userService.addCpf).toHaveBeenCalledWith(cpf);
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({ cpf: '12345678900' });
     });
 
-    it('should call next with error if addCpf fails', async () => {
-      const req = {
-        body: {
-          cpf: '12345678900',
-          createdAt: '2022-01-01T00:00:00.000Z'
-        }
-      };
+    it('should call next with the error if addCpf throws', async () => {
+      const cpf = { cpf: '12345678900' };
+      const req = { body: cpf };
       const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn().mockReturnValue({ cpf: '12345678900' })
+        status: jest.fn().mockReturnValue({ json: jest.fn() }),
       };
       const next = jest.fn();
-      userService.addCpf = jest.fn().mockRejectedValue(new Error('Error adding cpf'));
+
+      const error = new Error('Error adding CPF');
+      userService.addCpf = jest.fn().mockRejectedValue(error);
 
       await userController.addCpf(req as any, res as any, next);
 
-      expect(next).toEqual(new Error('Error adding cpf'));
-    });
-  });
-
-  describe('findByCpf', () => {
-
-    req = {
-      params: {
-        cpf: '12345678901'
-      }
-    };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
-    next = jest.fn();
-
-    it('should find the user by cpf and return the user information without the id', async () => {
-      const user = {
-        cpf: '12345678901',
-      };
-      const expectedUser = {
-        cpf: '12345678901',
-       
-      };
-      (userService.findByCpf as jest.Mock).mockResolvedValue(user);
-      await userController.findByCpf(req, res, next);
-      expect(userService.findByCpf).toHaveBeenCalledWith(user);
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ ...expectedUser, id: undefined });
-    });
-
-    it('should call next with the error if the find by cpf throws an error', async () => {
-      const error = new Error('Error finding the user by cpf');
-      (userService.findByCpf as jest.Mock).mockRejectedValue(error);
-      await userController.findByCpf(req, res, next);
+      expect(userService.addCpf).toHaveBeenCalledWith(cpf);
       expect(next).toHaveBeenCalledWith(error);
     });
   });
 
-  describe('removeCpf', () => {
+  describe("findByCpf", () => {
 
-    it('should remove the CPF', async () => {
-      const req = {
-        params: {
-          cpf: '12345678901'
-        }
-      };
+    it("should find the user by cpf and return the user information without the id", async () => {
+      const cpf = { cpf: "12345678901" };
+      const req = { params: cpf };
       const res = {
         status: jest.fn().mockReturnThis(),
-        json: jest.fn()
+        json: jest.fn(),
       };
       const next = jest.fn();
-
-      userController.removeCpf(req as any, res as any, next);
-
+      const expectedUser: User = {
+        cpf: "12345678901",
+        id: 123,
+        createdAt: new Date(),
+      };
+      userService.findByCpf = jest.fn().mockResolvedValue(expectedUser);
+      await userController.findByCpf(req as any, res as any, next);
+      expect(userService.findByCpf).toHaveBeenCalledWith(cpf);
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({});
+      expect(res.json).toHaveBeenCalledWith({ ...expectedUser, id: undefined });
+    });
+
+    it("should call next with the error if the find by cpf throws an error", async () => {
+      const cpf = { cpf: "12345678901" };
+      const req = { params: cpf };
+      const res = {
+        status: jest.fn().mockReturnValue({ json: jest.fn() }),
+      } as any;
+      const next = jest.fn();
+    
+      const error = new Error("Error finding the user by cpf");
+      userService.findByCpf = jest.fn().mockRejectedValue(error);
+      await userController.findByCpf(req as any, res, next);
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 
-  describe('allCpf', () => {
+  describe("removeCpf", () => {
 
-    it('deve retornar status 200 e todos os cpfs cadastrados', async () => {
-      const mockUserService = new UserService(userStorie);
-      jest.spyOn(mockUserService, 'allCpf').mockResolvedValue([
-        { cpf: '111.111.111-11', createdAt: new Date() },
-        { cpf: '222.222.222-22', createdAt: new Date() }
-      ]);
-
-      const mockResponse = {
+    it("should remove the CPF", async () => {
+      const cpf = { cpf: "12345678901" };
+      const req = { params: cpf };
+      const res = {
         status: jest.fn().mockReturnThis(),
-        json: jest.fn()
+        json: jest.fn().mockReturnValue({}),
       };
+      const next = jest.fn();
 
-      await userController.allCpf(undefined as any, mockResponse as any, undefined as any);
+      userService.removeCpf = jest.fn().mockResolvedValue({});
+      await userController.removeCpf(req as any, res as any, next);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith([
-        { cpf: '111.111.111-11', createdAt: expect.any(Date) },
-        { cpf: '222.222.222-22', createdAt: expect.any(Date) }
-      ]);
+      expect(userService.removeCpf).toHaveBeenCalledWith(cpf);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({});
+      expect(next).not.toHaveBeenCalled();
     });
 
-    it('deve retornar status 500 em caso de erro', async () => {
-      const mockUserService = new UserService(userStorie);
-      jest.spyOn(mockUserService, 'allCpf').mockRejectedValue(new Error('Error ao buscar todos os cpfs'));
+    it("should call next with the error if the remove cpf throws an error", async () => {
+      const cpf = { cpf: "12345678901" };
+      const req = { params: cpf };
+      const res = {
+        status: jest.fn().mockReturnValue({ json: jest.fn() }),
+      } as any;
+      const next = jest.fn();
 
-      const mockResponse = {
+      const error = new Error("Error removing the cpf");
+      userService.removeCpf = jest.fn().mockRejectedValue(error);
+      await userController.removeCpf(req as any, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+
+  describe("allCpf", () => {
+
+    it("should return all cpfs", async () => {
+      const cpfs: Omit<User, "id">[] = [
+        { cpf: "12345678901", createdAt: new Date() },
+        { cpf: "10987654321", createdAt: new Date() },
+        { cpf: "09876543210", createdAt: new Date() },
+      ];
+      const req = {} as express.Request;
+      const res = {
         status: jest.fn().mockReturnThis(),
-        json: jest.fn()
-      };
+        json: jest.fn().mockReturnThis(),
+      } as any;
+      const next = jest.fn();
 
-      const mockNext = jest.fn();
+      userService.allCpf = jest.fn().mockResolvedValue(cpfs);
 
-      await userController.allCpf(undefined as any, mockResponse as any, mockNext);
+      await userController.allCpf(req, res, next);
 
-      expect(mockNext).toHaveBeenCalledWith(new Error('Error ao buscar todos os cpfs'));
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(cpfs);
+    });
+
+    it("should call next with the error", async () => {
+      const req = {} as express.Request;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis(),
+      } as any;
+      const next = jest.fn();
+
+      const error = new Error("Error fetching all cpfs");
+      userService.allCpf = jest.fn().mockRejectedValue(error);
+
+      await userController.allCpf(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
