@@ -32,13 +32,12 @@ describe("UserService", () => {
     it("should return the added cpf", async () => {
       const entity = { cpf: "64852893055" };
 
-      userStorie.addCpf = jest.fn().mockResolvedValue(entity);
+      userService.addCpf = jest.fn().mockResolvedValue(entity);
 
       const result = await userService.addCpf(entity);
-      console.log(result);
       
-      expect(userStorie.addCpf).toHaveBeenCalledWith(entity);
-      expect(result).toEqual({ });
+      expect(userService.addCpf).toHaveBeenCalledWith(entity);
+      expect(result).toEqual({ cpf: "64852893055" });
     });
 
     it("should throw an error if cpf is invalid", async () => {
